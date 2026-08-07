@@ -1,0 +1,76 @@
+JARVIS / F.R.I.D.A.Y — AI Assistant System
+============================================
+
+Project Root: /home/z/my-project
+──────────────────────────────────────────────────────────────────────
+
+src/
+├── app/
+│   ├── layout.tsx                 # Root layout (dark mode, Geist fonts, Toaster)
+│   ├── page.tsx                   # Main Jarvis HUD interface page
+│   ├── globals.css                # Tailwind + custom HUD CSS (glow, scan-lines, scrollbar)
+│   └── api/
+│       ├── chat/
+│       │   └── route.ts           # POST: AI chat endpoint (routes to LLM + tools)
+│       ├── search/
+│       │   └── route.ts           # POST: Web search via DuckDuckGo (FREE, no key)
+│       └── read-url/
+│           └── route.ts           # POST: Read any URL and extract text (FREE)
+│
+├── components/
+│   ├── jarvis/
+│   │   ├── ArcReactor.tsx         # Animated SVG arc reactor (concentric rotating rings)
+│   │   ├── ChatPanel.tsx          # Main chat interface (messages + input + voice)
+│   │   ├── ChatMessage.tsx        # Individual chat bubble (user/assistant, markdown)
+│   │   ├── HolographicPanel.tsx   # Translucent glowing panel wrapper (key visual)
+│   │   ├── MissionPanel.tsx       # Task/mission progress tracker with steps
+│   │   ├── StatusBar.tsx          # Top bar (Arc Reactor, status indicators, time, settings)
+│   │   ├── VoiceWaveform.tsx      # Canvas-based audio waveform visualization
+│   │   ├── SystemMetrics.tsx      # Live CPU/Memory/Network/Disk stats (simulated)
+│   │   ├── Widget.tsx             # Individual widget card (stat/chart/info/mission)
+│   │   └── WidgetDashboard.tsx    # Responsive grid of widgets + add button
+│   └── ui/                        # shadcn/ui components (button, card, dialog, etc.)
+│
+├── hooks/
+│   ├── useJarvisChat.ts           # Zustand store: messages, missions, widgets, config
+│   ├── useVoiceRecognition.ts     # Web Speech API: Speech-to-text (FREE)
+│   ├── useTextToSpeech.ts         # Web Speech API: Text-to-speech (FREE)
+│   ├── use-mobile.ts              # Mobile detection hook
+│   └── use-toast.ts               # Toast notification hook
+│
+├── lib/
+│   ├── free-llm.ts                # LLM providers: Built-in (free), HuggingFace (free), Ollama (local)
+│   ├── command-router.ts          # Natural language → tool detection + execution
+│   ├── tools/
+│   │   ├── web-search.ts          # DuckDuckGo HTML search (FREE, no API key)
+│   │   └── web-reader.ts          # URL fetch + HTML strip to text (FREE)
+│   ├── db.ts                      # Prisma database client
+│   └── utils.ts                   # Utility functions (cn, etc.)
+│
+├── types/
+│   └── jarvis.ts                  # TypeScript types (ChatMessage, Mission, Widget, etc.)
+│
+├── hooks/                         # (shared hooks directory)
+└── components/                    # (shared components directory)
+
+prisma/
+└── schema.prisma                  # Prisma schema (SQLite)
+
+public/
+├── logo.svg                       # App logo
+└── robots.txt                     # SEO robots
+
+Root Files:
+├── package.json                   # Dependencies and scripts
+├── next.config.ts                 # Next.js configuration
+├── tailwind.config.ts             # Tailwind CSS configuration
+├── tsconfig.json                  # TypeScript configuration
+├── postcss.config.mjs             # PostCSS configuration
+├── eslint.config.mjs              # ESLint configuration
+├── components.json                # shadcn/ui configuration
+├── Caddyfile                      # Gateway configuration
+├── README.md                      # Project README
+├── ARCHITECTURE.md                # Architecture documentation
+├── CONTRIBUTING.md                # Contribution guidelines
+├── LICENSE.md                     # MIT License
+└── FOLDER-MAP.txt                 # This file

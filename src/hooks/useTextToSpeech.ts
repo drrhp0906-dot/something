@@ -13,11 +13,16 @@ interface UseTextToSpeechReturn {
 
 export function useTextToSpeech(): UseTextToSpeechReturn {
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isSupported, setIsSupported] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const selectedVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  const isSupported = typeof window !== 'undefined' && !!window.speechSynthesis;
+  // Detect support only after mount to avoid SSR/CSR hydration mismatch
+  useEffect(() => {
+    const supported = typeof window !== 'undefined' && !!window.speechSynthesis;
+    setIsSupported(supported);
+  }, []);
 
   useEffect(() => {
     if (!isSupported) return;

@@ -15,6 +15,7 @@ export function useVoiceRecognition(
 ): UseVoiceRecognitionReturn {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
+  const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const onResultRef = useRef(onResult);
 
@@ -22,8 +23,12 @@ export function useVoiceRecognition(
     onResultRef.current = onResult;
   }, [onResult]);
 
-  const isSupported = typeof window !== 'undefined' &&
-    !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  // Detect support only after mount to avoid SSR/CSR hydration mismatch
+  useEffect(() => {
+    const supported = typeof window !== 'undefined' &&
+      !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+    setIsSupported(supported);
+  }, []);
 
   useEffect(() => {
     if (!isSupported) return;

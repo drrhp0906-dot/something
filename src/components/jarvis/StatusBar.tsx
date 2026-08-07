@@ -4,9 +4,16 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ArcReactor from './ArcReactor';
 import { useJarvisStore } from '@/hooks/useJarvisChat';
-import { Mic, MicOff, Volume2, VolumeX, Wifi, WifiOff, Settings } from 'lucide-react';
+import { Camera, CameraOff, Settings } from 'lucide-react';
 
-export default function StatusBar() {
+interface StatusBarProps {
+  isCameraOn?: boolean;
+  isCameraLoading?: boolean;
+  onStartCamera?: () => void;
+  onStopCamera?: () => void;
+}
+
+export default function StatusBar({ isCameraOn = false, isCameraLoading = false, onStartCamera, onStopCamera }: StatusBarProps) {
   const [time, setTime] = useState(new Date());
   const [showSettings, setShowSettings] = useState(false);
   const { config, setConfig, setAIProvider } = useJarvisStore();
@@ -48,11 +55,20 @@ export default function StatusBar() {
             active={config.voiceEnabled}
             color={config.voiceEnabled ? 'cyan' : 'gray'}
           />
-          <StatusIndicator
-            label="CAM"
-            active={false}
-            color="gray"
-          />
+          <div className="flex items-center gap-1.5">
+            <StatusIndicator
+              label="CAM"
+              active={isCameraOn}
+              color={isCameraOn ? 'cyan' : isCameraLoading ? 'yellow' : 'gray'}
+            />
+            <button
+              onClick={isCameraOn ? onStopCamera : onStartCamera}
+              className="rounded p-0.5 text-gray-500 transition-colors hover:text-cyan-400"
+              title={isCameraOn ? 'Stop Camera' : isCameraLoading ? 'Loading...' : 'Start Camera'}
+            >
+              {isCameraOn ? <Camera className="h-3 w-3 text-cyan-400" /> : <CameraOff className="h-3 w-3" />}
+            </button>
+          </div>
           <StatusIndicator
             label="NET"
             active

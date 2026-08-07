@@ -20,6 +20,12 @@
 - **Auto-speak mode** — Automatically reads responses aloud
 - **Waveform visualization** — Visual feedback when listening/speaking
 
+### ✋ Hand Tracking
+- **MediaPipe Hands** — Control the interface with your hand via webcam (FREE)
+- **Virtual Cursor** — Index finger controls the cursor position
+- **Pinch to Click** — Thumb + index pinch triggers mouse clicks
+- **Camera toggle** — Start/stop camera from the status bar
+
 ### 🌐 Web Capabilities
 - **Web Search** — Search the internet via DuckDuckGo (FREE, no API key)
 - **URL Reader** — Read and summarize any web page (FREE)

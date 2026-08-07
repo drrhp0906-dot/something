@@ -74,18 +74,19 @@ export default function ArcReactor({ size = 'md', className = '' }: ArcReactorPr
           style={{ transformOrigin: `${center}px ${center}px` }}
         />
 
-        {/* Core glow */}
-        <motion.circle
-          cx={center} cy={center} r={s * 0.12}
-          fill="rgba(0,229,255,0.15)"
-          stroke="rgba(0,229,255,0.8)"
-          strokeWidth={1.5}
-          animate={{
-            r: [s * 0.12, s * 0.14, s * 0.12],
-            opacity: [0.8, 1, 0.8],
-          }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        />
+        {/* Core glow — animate scale (CSS transform) instead of `r` attribute, because framer-motion strips the static `r` prop when `r` is in `animate`, which produces `r="undefined"` in SSR HTML. */}
+	<motion.circle
+  	  cx={center} cy={center} r={s * 0.12}
+  	  fill="rgba(0,229,255,0.15)"
+	  stroke="rgba(0,229,255,0.8)"
+  	  strokeWidth={1.5}
+ 	  animate={{
+    	    scale: [1, 1.17, 1],
+    	    opacity: [0.8, 1, 0.8],
+  	  }}
+ 	  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+ 	  style={{ transformOrigin: `${center}px ${center}px` }}
+	/>
 
         {/* Center dot */}
         <motion.circle

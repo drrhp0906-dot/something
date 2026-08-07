@@ -13,15 +13,15 @@ interface UseTextToSpeechReturn {
 
 export function useTextToSpeech(): UseTextToSpeechReturn {
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isSupported, setIsSupported] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  // SSR-safe: starts as false on both server and client hydration, then
+  // becomes true (if supported) inside useEffect — avoids React #418.
+  const [isSupported, setIsSupported] = useState(false);
   const selectedVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  // Detect support only after mount to avoid SSR/CSR hydration mismatch
   useEffect(() => {
-    const supported = typeof window !== 'undefined' && !!window.speechSynthesis;
-    setIsSupported(supported);
+    setIsSupported(typeof window !== 'undefined' && !!window.speechSynthesis);
   }, []);
 
   useEffect(() => {

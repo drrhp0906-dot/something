@@ -14,12 +14,14 @@ interface StatusBarProps {
 }
 
 export default function StatusBar({ isCameraOn = false, isCameraLoading = false, onStartCamera, onStopCamera }: StatusBarProps) {
-  const [time, setTime] = useState(new Date());
+  const [time, setTime] = useState<Date | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const { config, setConfig, setAIProvider } = useJarvisStore();
 
   useEffect(() => {
-    const interval = setInterval(() => setTime(new Date()), 1000);
+    const update = () => setTime(new Date());
+    update(); // initial set
+    const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -85,10 +87,10 @@ export default function StatusBar({ isCameraOn = false, isCameraLoading = false,
         <div className="flex items-center gap-3">
           <div className="text-right">
             <div className="text-xs font-mono text-cyan-400/80">
-              {time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+              {time ? time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--'}
             </div>
             <div className="text-[10px] text-gray-500">
-              {time.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+              {time ? time.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '--- --, ----'}
             </div>
           </div>
 

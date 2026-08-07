@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 interface ArcReactorProps {
@@ -7,11 +8,30 @@ interface ArcReactorProps {
   className?: string;
 }
 
-const sizes = { sm: 48, md: 80, lg: 120 };
+const sizes = { sm: 48, md: 80, lg: 120 } as const;
+
+// Pre-compute sector line coordinates to avoid hydration mismatch
+// (Math.cos/sin produce slightly different float precision on server vs client)
+const SECTOR_ANGLES = [0, 60, 120, 180, 240, 300] as const;
+const SECTOR_LINES: Record<number, { x1: number; y1: number; x2: number; y2: number }[]> = {};
+
+for (const size of [48, 80, 120] as const) {
+  const c = size / 2;
+  SECTOR_LINES[size] = SECTOR_ANGLES.map((angle) => {
+    const rad = (angle * Math.PI) / 180;
+    return {
+      x1: parseFloat((c + Math.cos(rad) * size * 0.2).toFixed(2)),
+      y1: parseFloat((c + Math.sin(rad) * size * 0.2).toFixed(2)),
+      x2: parseFloat((c + Math.cos(rad) * size * 0.37).toFixed(2)),
+      y2: parseFloat((c + Math.sin(rad) * size * 0.37).toFixed(2)),
+    };
+  });
+}
 
 export default function ArcReactor({ size = 'md', className = '' }: ArcReactorProps) {
   const s = sizes[size];
   const center = s / 2;
+  const sectorLines = SECTOR_LINES[s];
 
   return (
     <div className={`relative inline-flex items-center justify-center ${className}`}>
@@ -75,14 +95,14 @@ export default function ArcReactor({ size = 'md', className = '' }: ArcReactorPr
           transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        {/* Sector lines */}
-        {[0, 60, 120, 180, 240, 300].map((angle, i) => (
+        {/* Sector lines — using pre-computed coordinates */}
+        {sectorLines.map((line, i) => (
           <motion.line
             key={i}
-            x1={center + Math.cos((angle * Math.PI) / 180) * s * 0.2}
-            y1={center + Math.sin((angle * Math.PI) / 180) * s * 0.2}
-            x2={center + Math.cos((angle * Math.PI) / 180) * s * 0.37}
-            y2={center + Math.sin((angle * Math.PI) / 180) * s * 0.37}
+            x1={line.x1}
+            y1={line.y1}
+            x2={line.x2}
+            y2={line.y2}
             stroke="rgba(0,229,255,0.2)"
             strokeWidth={0.5}
             animate={{ opacity: [0.2, 0.5, 0.2] }}
